@@ -1,7 +1,9 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
+import { SocketContext } from "../context/socketContext";
 
-const AddBand = ({ socket }) => {
+const AddBand = () => {
 	const [bandName, setBandName] = useState("");
+	const { socket } = useContext(SocketContext);
 
 	const handleAddBand = (event) => {
 		event.preventDefault();

@@ -1,32 +1,10 @@
-import React, { useEffect, useState } from "react";
-import io from "socket.io-client";
+import React, { useContext } from "react";
 import AddBand from "./components/AddBand";
 import BandList from "./components/BandList";
-
-const connectToSocketServer = () => {
-	const socket = io.connect("http://localhost:8080", {
-		transports: ["websocket"],
-	});
-
-	return socket;
-};
+import { SocketContext } from "./context/socketContext";
 
 function App() {
-	const [socket] = useState(connectToSocketServer());
-	const [online, setOnline] = useState(false);
-	const [bandList, setBandList] = useState([]);
-
-	useEffect(() => {
-		socket.on("connect", () => {
-			setOnline(true);
-		});
-	}, [socket]);
-
-	useEffect(() => {
-		socket.on("band-list", (bands) => {
-			setBandList(bands);
-		});
-	}, []);
+	const { online } = useContext(SocketContext);
 
 	return (
 		<div className="container">
@@ -45,10 +23,10 @@ function App() {
 			<hr />
 			<div className="row">
 				<div className="col-8">
-					<BandList bandList={bandList} socket={socket} />
+					<BandList />
 				</div>
 				<div className="col-4">
-					<AddBand socket={socket} />
+					<AddBand />
 				</div>
 			</div>
 		</div>

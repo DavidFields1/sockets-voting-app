@@ -1,7 +1,15 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
+import { SocketContext } from "../context/socketContext";
 
-const BandList = ({ bandList, socket }) => {
-	const [bands, setBands] = useState(bandList);
+const BandList = () => {
+	const [bands, setBands] = useState([]);
+	const { socket } = useContext(SocketContext);
+
+	useEffect(() => {
+		socket.on("band-list", (bands) => {
+			setBands(bands);
+		});
+	}, [socket]);
 
 	const handleChange = (event, id) => {
 		const newName = event.target.value;
@@ -32,8 +40,8 @@ const BandList = ({ bandList, socket }) => {
 	};
 
 	useEffect(() => {
-		setBands(bandList);
-	}, [bandList]);
+		setBands(bands);
+	}, [bands]);
 
 	useEffect(() => {
 		socket.on("band-list", (newBands) => {
@@ -87,7 +95,7 @@ const BandList = ({ bandList, socket }) => {
 						<th></th>
 					</tr>
 				</thead>
-				<tbody>{bandList.map((band) => bandRow(band))}</tbody>
+				<tbody>{bands.map((band) => bandRow(band))}</tbody>
 			</table>
 		</>
 	);
